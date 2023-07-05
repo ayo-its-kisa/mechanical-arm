@@ -1,0 +1,21 @@
+import rospy
+from std_msgs.msg import Float64
+
+def move_joint(joint_name, angle):
+    pub = rospy.Publisher('/robot_arm/joint_' + joint_name + '_position_controller/command', Float64, queue_size=10)
+    rospy.init_node('robot_arm_controller', anonymous=True)
+    rate = rospy.Rate(10)  # Publishing rate in Hz
+
+    while not rospy.is_shutdown():
+        pub.publish(angle)
+        rate.sleep()
+
+# Example usage:
+if __name__ == '__main__':
+    joint_name = '1'  # Specify the joint number
+    target_angle = 1.5  # Specify the desired angle in radians
+
+    try:
+        move_joint(joint_name, target_angle)
+    except rospy.ROSInterruptException:
+        pass
